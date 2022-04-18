@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CheckoutpaymentGateway.Repository;
+using CheckoutpaymentGateway.Service;
+using CheckoutPaymentGateway.Bank;
+using CheckoutPaymentGateway.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +30,11 @@ namespace CheckOutPaymentGateway.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // register dependencies
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IBankingClient, MockBankClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

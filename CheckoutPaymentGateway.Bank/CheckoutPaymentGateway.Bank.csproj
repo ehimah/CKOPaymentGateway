@@ -6,4 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CheckoutPaymentGateway.Service\CheckoutPaymentGateway.Service.csproj" />
+  </ItemGroup>
 </Project>

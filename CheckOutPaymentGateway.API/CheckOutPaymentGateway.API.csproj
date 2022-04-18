@@ -5,4 +5,15 @@
   </PropertyGroup>
 
 
+  <ItemGroup>
+    <ProjectReference Include="..\CheckoutPaymentGateway.Service\CheckoutPaymentGateway.Service.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\CheckoutpaymentGateway.Repository\CheckoutpaymentGateway.Repository.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\CheckoutPaymentGateway.Bank\CheckoutPaymentGateway.Bank.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
