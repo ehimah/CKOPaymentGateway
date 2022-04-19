@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Linq;
+using CheckoutPaymentGateway.Bank.Validators;
 using CheckoutPaymentGateway.Service;
 using CheckoutPaymentGateway.Service.Models;
 
 namespace CheckoutPaymentGateway.Bank
 {
-	public class MockBankClient: IBankingClient
-	{
-        const int VALID_CARD_NUMBER_LENGTH = 16;
-        const int VALID_CARD_CVV_LENGTH = 16;
-		public MockBankClient()
-		{
-		}
+    class ValidationResult
+    {
+        public bool IsValid;
+        public string ErrorMessages;
+    }
 
+    public class MockBankClient: IBankingClient
+	{
         public Task<TransactionResponse> ProcessPayment(PaymentRequest paymentRequest)
         {
             // build response
@@ -22,13 +24,13 @@ namespace CheckoutPaymentGateway.Bank
             var validationResult = PaymentRequestIsValid(paymentRequest);
 
             // validate payment request
-            if (!validationResult.Item1)
+            if (!validationResult.IsValid)
             {
                 // decline the request
                 response.Status = TransactionStatus.Declined;
 
                 // decline with humane error message
-                response.Comment = validationResult.Item2;
+                response.Comment = validationResult.ErrorMessages;
             }
             else
             {
@@ -46,44 +48,32 @@ namespace CheckoutPaymentGateway.Bank
         /// </summary>
         /// <param name="paymentRequest"></param>
         /// <returns></returns>
-        private static Tuple<bool, string> PaymentRequestIsValid(PaymentRequest paymentRequest)
+        private static ValidationResult PaymentRequestIsValid(PaymentRequest paymentRequest)
         {
-            var errors = new List<string>();
 
-            // card length
-            if(paymentRequest.CardNumber.Length != VALID_CARD_NUMBER_LENGTH)
+            // hacky, better to expose a routine to make this list extensible
+            List<IPaymentRequestValidator> validators = new()
             {
-                errors.Add("Invalid Card Number Length");
-            }
-
-            // cvv length
-            if (paymentRequest.CardCVV.Length != VALID_CARD_CVV_LENGTH)
-            {
-                errors.Add("Invalid Card CVV Length");
-            }
-
-            // card holder name present
-            if (string.IsNullOrWhiteSpace(paymentRequest.CardHolderFullName))
-            {
-                errors.Add("The Card Holders Name is Empty");
-            }
-
-            // card expiry is in future
-            var cardExpiry = DateTime.Parse(paymentRequest.CardExpiryDate);
-            if (cardExpiry.CompareTo(DateTime.Now) < 0)
-            {
-                errors.Add("The Card is Expired");
-            }
+                    new CreditCardCvvValidator(),
+                    new CreditCardExpiryValidator(),
+                    new CreditCardNameValidator(),
+                    new CreditCardNumberValidator(),
+            };
 
             // compile errors and report
-            if(errors.Count > 0)
-            {
-                return new Tuple<bool, string>(false, string.Join("\n", errors));
-            }
+            var errors = validators.Where(validator => !validator.IsValid(paymentRequest))
+                .Select(validator => validator.ErrorMessage).ToArray();
 
-            // return a success response
-            return new Tuple<bool, string>(true, string.Join("\n", string.Empty));
+            
+            var result =  new ValidationResult {
+                IsValid = errors.Length == 0,
+                ErrorMessages = string.Join("\n", errors)
+            };
+
+            return result;
         }
+
+        
     }
 }
 

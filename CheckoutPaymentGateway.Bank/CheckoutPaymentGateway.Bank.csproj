@@ -9,4 +9,10 @@
   <ItemGroup>
     <ProjectReference Include="..\CheckoutPaymentGateway.Service\CheckoutPaymentGateway.Service.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Validators\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Validators\" />
+  </ItemGroup>
 </Project>
