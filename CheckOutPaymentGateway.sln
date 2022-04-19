@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckoutPaymentGateway.Bank
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckoutpaymentGateway.Repository", "CheckoutpaymentGateway.Repository\CheckoutpaymentGateway.Repository.csproj", "{F05F18AF-89D6-401D-8511-0C40AA7B38AD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0BF070E8-1E7B-49EE-A9BA-0B91CACB10C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckoutPaymentGateway.Tests.API", "CheckoutPaymentGateway.Tests.API\CheckoutPaymentGateway.Tests.API.csproj", "{0B834ECE-9880-4A48-B15B-7E3B0F8AD481}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,11 +37,18 @@ Global
 		{F05F18AF-89D6-401D-8511-0C40AA7B38AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F05F18AF-89D6-401D-8511-0C40AA7B38AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F05F18AF-89D6-401D-8511-0C40AA7B38AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B834ECE-9880-4A48-B15B-7E3B0F8AD481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B834ECE-9880-4A48-B15B-7E3B0F8AD481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B834ECE-9880-4A48-B15B-7E3B0F8AD481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B834ECE-9880-4A48-B15B-7E3B0F8AD481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DDDB9A9F-A2E5-451D-92CD-8E8C06CFDBDE}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0B834ECE-9880-4A48-B15B-7E3B0F8AD481} = {0BF070E8-1E7B-49EE-A9BA-0B91CACB10C2}
 	EndGlobalSection
 EndGlobal

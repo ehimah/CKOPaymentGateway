@@ -31,7 +31,7 @@ namespace CheckOutPaymentGateway.API.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] object value)
         {
-            return StatusCode((int)HttpStatusCode.OK, value);
+            return StatusCode((int)HttpStatusCode.Created, value);
         }
     }
 }
