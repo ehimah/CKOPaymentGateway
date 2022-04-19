@@ -14,14 +14,23 @@ public class PaymentService : IPaymentService
         this.bankingClient = bankingClient;
     }
 
-    Task<Payment> IPaymentService.GetPaymentInfo(Guid paymentId)
+    public async Task<Payment> GetPaymentInfo(Guid paymentId)
     {
-        throw new NotImplementedException();
+        var payment = await repository.GetPayment(paymentId);
+        return payment;
     }
 
-    Task<PaymentResponse> IPaymentService.ProcessPayment(PaymentRequest request)
+    public async Task<PaymentResponse> ProcessPayment(PaymentRequest request)
     {
-        throw new NotImplementedException();
+        // call acquiring bank to process transaction
+        var paymnentResponse = await this.bankingClient.ProcessPayment(request);
+
+        // save the payment information to storage
+        var payment = await this.repository.Save(PaymentBuilder.FromRequestResponse(request, paymnentResponse));
+
+        paymnentResponse.Id = payment.Id;
+
+        return paymnentResponse;
     }
 }
 
