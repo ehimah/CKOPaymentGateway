@@ -46,6 +46,42 @@ public class PaymentGatewayTests: IClassFixture<WebApplicationFactory<CheckOutPa
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
 
+    [Fact]
+    public async void ProcessPayment_WhenCalledWithDuplicateRequestParameters_ReturnsConflictResult()
+    {
+        // Arrange
+        var request1 = new HttpRequestMessage(HttpMethod.Post, REST_API_URL);
+
+        var payload = new PaymentRequest
+        {
+            Id = Guid.NewGuid(),
+            CardNumber = "1234123412341234",
+            CardHolderFullName = "EHIMAH OBUSE",
+            CardExpiryDate = "04/25",
+            CardCVV = "NGN",
+            Amount = 12.34,
+            Currency = "GBP",
+        };
+
+        request1.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        // Act
+        var response = await httpClient.SendAsync(request1);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        // Request 2
+        var request2 = new HttpRequestMessage(HttpMethod.Post, REST_API_URL);
+        // update the card detail
+        payload.CardNumber = "9876543210987654";
+        request2.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+        // Call endpoint seconfd time with same request id
+        var response2 = await httpClient.SendAsync(request2);
+
+        Assert.Equal(HttpStatusCode.Created, response2.StatusCode);
+    }
+
 
     [Fact]
     public async void GetPayment_WhenCalledWithValidId_ReturnsPaymentItem()
