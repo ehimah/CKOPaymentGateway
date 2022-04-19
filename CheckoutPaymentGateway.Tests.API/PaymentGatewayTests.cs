@@ -28,6 +28,7 @@ public class PaymentGatewayTests: IClassFixture<WebApplicationFactory<CheckOutPa
 
         var payload = new PaymentRequest
         {
+            Id = Guid.NewGuid(),
             CardNumber = "1234123412341234",
             CardHolderFullName = "EHIMAH OBUSE",
             CardExpiryDate = "04/25",
@@ -61,6 +62,4 @@ public class PaymentGatewayTests: IClassFixture<WebApplicationFactory<CheckOutPa
 
         Assert.NotNull(item);
     }
-
-
 }
