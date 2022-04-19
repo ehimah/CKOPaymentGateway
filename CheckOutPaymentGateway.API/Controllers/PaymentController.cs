@@ -29,7 +29,18 @@ namespace CheckOutPaymentGateway.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var response = new { Id = id };
+            // fetch the payment from the service
+            var existingPayment = await paymentService.GetPaymentInfo(id);
+
+            // if payment not found
+            if (existingPayment == null)
+            {
+                // return a not found error
+                return StatusCode((int)HttpStatusCode.NotFound);
+            }
+
+            // map from payment to DTO
+            var response = mapper.Map<PaymentResponse>(existingPayment);
 
             return StatusCode((int)HttpStatusCode.OK, response);
         }
@@ -50,16 +61,16 @@ namespace CheckOutPaymentGateway.API.Controllers
                     return StatusCode((int)HttpStatusCode.Conflict);
                 }
 
-                var paymentRequet = this.mapper.Map<PaymentRequest>(paymentRequestDto);
+                var paymentRequest = this.mapper.Map<PaymentRequest>(paymentRequestDto);
 
-                var response = await paymentService.ProcessPayment(paymentRequet);
+                var processedPayment = await paymentService.ProcessPayment(paymentRequest);
 
                 // if the transaction didn't succeed, then report errors
-                if(response.Status != TransactionStatus.Accepted)
+                if(processedPayment.Status != TransactionStatus.Accepted)
                 {
-                    return StatusCode((int)HttpStatusCode.BadRequest, response.ExternalComment);
+                    return StatusCode((int)HttpStatusCode.BadRequest, processedPayment.ExternalComment);
                 }
-                var responseDto = mapper.Map<PaymentResponseDto>(response);
+                var responseDto = mapper.Map<PaymentResponse>(processedPayment);
 
                 return StatusCode((int)HttpStatusCode.Created, responseDto);
             }

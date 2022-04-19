@@ -23,21 +23,24 @@ namespace CheckoutPaymentGateway.Service.Entities
 		public static Payment PartialFromRequest(PaymentRequest request)
         {
 			var cardMask = request.CardNumber.Substring(request.CardNumber.Length - 4).PadLeft(request.CardNumber.Length, '*');
-			return new Payment
+			var payment = new Payment
 			{
+				Id = request.Id,
 				Amount = request.Amount,
 				CardExpiryDate = request.CardExpiryDate,
 				CardHolderFullName = request.CardHolderFullName,
 				CardNumber = cardMask,
 				Currency = request.Currency,
-
 			};
+
+			return payment;
 		}
 		public static Payment FromRequestResponse(PaymentRequest request, PaymentResponse response)
         {
 			var cardMask = request.CardNumber.Substring(request.CardNumber.Length - 4).PadLeft(request.CardNumber.Length, '*');
-			return new Payment
+			var payment = new Payment
 			{
+				Id= request.Id,
 				Amount = request.Amount,
 				CardExpiryDate = request.CardExpiryDate,
 				CardHolderFullName = request.CardHolderFullName,
@@ -47,6 +50,8 @@ namespace CheckoutPaymentGateway.Service.Entities
 				ExternalReference = response.ExternalReference
 
 			};
+
+			return payment;
         }
 	}
 

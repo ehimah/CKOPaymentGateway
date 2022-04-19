@@ -8,7 +8,8 @@ public class PaymentService : IPaymentService
     private readonly IPaymentRepository repository;
     private readonly IBankingClient bankingClient;
 
-    public PaymentService(IPaymentRepository repository, IBankingClient bankingClient)
+    public PaymentService(IPaymentRepository repository,
+        IBankingClient bankingClient)
     {
         this.repository = repository;
         this.bankingClient = bankingClient;
@@ -20,7 +21,7 @@ public class PaymentService : IPaymentService
         return payment;
     }
 
-    public async Task<PaymentResponse> ProcessPayment(PaymentRequest request)
+    public async Task<Payment> ProcessPayment(PaymentRequest request)
     {
         // save this transaction as pending
         var payment = PaymentBuilder.PartialFromRequest(request);
@@ -41,12 +42,7 @@ public class PaymentService : IPaymentService
         // update the payment information to storage
         await this.repository.Save(payment);
 
-        return new PaymentResponse {
-            Id = request.Id,
-            ExternalReference = transactionResponse.Id,
-            Status= transactionResponse.Status,
-            ExternalComment = transactionResponse.Comment
-        };
+        return payment;
     }
 }
 

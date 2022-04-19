@@ -18,7 +18,7 @@ namespace CheckoutPaymentGateway.Service
 		/// </summary>
 		/// <param name="request">The reqyuest payload</param>
 		/// <returns>The response from the payment processor</returns>
-		Task<PaymentResponse> ProcessPayment(PaymentRequest request );
+		Task<Payment> ProcessPayment(PaymentRequest request );
 
 	}
 }
