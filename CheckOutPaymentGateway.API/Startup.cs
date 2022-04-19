@@ -35,8 +35,8 @@ namespace CheckOutPaymentGateway.API
 
             // register dependencies
             services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IBankingClient, MockBankClient>();
+            services.AddSingleton<IPaymentRepository, InMemoryPaymentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
