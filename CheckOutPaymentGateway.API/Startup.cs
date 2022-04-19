@@ -33,7 +33,7 @@ namespace CheckOutPaymentGateway.API
 
             // register dependencies
             services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentRepository, InMemoryPaymentRepository>();
             services.AddScoped<IBankingClient, MockBankClient>();
         }
 

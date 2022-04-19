@@ -10,14 +10,14 @@ namespace CheckoutpaymentGateway.Service
         /// </summary>
         /// <param name="id">the id of the payment to be retrieved</param>
         /// <returns>The payment item</returns>
-		Task<Payment> GetPayment(Guid id);
+		Task<Payment>? GetPayment(Guid id);
 
 		/// <summary>
         /// Saves a payment
         /// </summary>
         /// <param name="payment">the payment to be saved</param>
         /// <returns>The id of the saved payment</returns>
-		Task<Guid> Save(Payment payment);
+		Task<Payment> Save(Payment payment);
 		
 	}
 }
