@@ -19,6 +19,19 @@ namespace CheckoutPaymentGateway.Service.Entities
 
 	public class PaymentBuilder
 	{
+		public static Payment PartialFromRequest(PaymentRequest request)
+        {
+			var cardMask = request.CardNumber.Substring(request.CardNumber.Length - 4).PadLeft(request.CardNumber.Length, '*');
+			return new Payment
+			{
+				Amount = request.Amount,
+				CardExpiryDate = request.CardExpiryDate,
+				CardHolderFullName = request.CardHolderFullName,
+				CardNumber = cardMask,
+				Currency = request.Currency,
+
+			};
+		}
 		public static Payment FromRequestResponse(PaymentRequest request, PaymentResponse response)
         {
 			var cardMask = request.CardNumber.Substring(request.CardNumber.Length - 4).PadLeft(request.CardNumber.Length, '*');

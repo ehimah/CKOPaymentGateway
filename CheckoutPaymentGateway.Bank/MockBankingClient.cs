@@ -10,10 +10,12 @@ namespace CheckoutPaymentGateway.Bank
 		{
 		}
 
-        public Task<PaymentResponse> ProcessPayment(PaymentRequest paymentRequest)
+        public Task<TransactionResponse> ProcessPayment(PaymentRequest paymentRequest)
         {
             // build response
-            var response = new PaymentResponse() { ExternalReference = Guid.NewGuid() };
+            var response = new TransactionResponse() {
+                Id = Guid.NewGuid()
+            };
 
             // validate payment request
             if (!this.PaymentRequestIsValid(paymentRequest))
@@ -22,6 +24,7 @@ namespace CheckoutPaymentGateway.Bank
                 // TODO: decline with humane error message
                 response.Status = TransactionStatus.Declined;
             }
+            response.Status = TransactionStatus.Accepted;
 
             // return response
             return Task.FromResult(response);

@@ -12,7 +12,7 @@ namespace CheckoutpaymentGateway.Repository
             this.paymentStore = new Dictionary<Guid, Payment>();
 		}
 
-        public Task<Payment>? GetPayment(Guid id)
+        public Task<Payment> GetPayment(Guid id)
         {
             // if payment exist, return payment item from store
             if (paymentStore.ContainsKey(id))
@@ -22,13 +22,13 @@ namespace CheckoutpaymentGateway.Repository
             }
 
             // payment not found, return null
-            return null;
+            return Task.FromResult<Payment>(null);
         }
 
         public Task<Payment> Save(Payment payment)
         {
             // save the payment item to storage and return
-            paymentStore.Add(payment.Id, payment);
+            paymentStore[payment.Id]= payment;
             return Task.FromResult(payment);
         }
     }

@@ -9,6 +9,7 @@ namespace CheckoutPaymentGateway.Service.Models
     public enum TransactionStatus
 	{
         [EnumMember(Value = "Accepted")] Accepted,
+        [EnumMember(Value = "Pending")]  Pending,
         [EnumMember(Value = "Declined")] Declined
 	}
 }

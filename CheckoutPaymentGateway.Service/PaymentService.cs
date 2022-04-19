@@ -22,15 +22,29 @@ public class PaymentService : IPaymentService
 
     public async Task<PaymentResponse> ProcessPayment(PaymentRequest request)
     {
+        // save this transaction as pending
+        var payment = PaymentBuilder.PartialFromRequest(request);
+
+        // set the transaction as pending
+        payment.Status = TransactionStatus.Pending;
+
+        await this.repository.Save(payment);
+
         // call acquiring bank to process transaction
-        var paymnentResponse = await this.bankingClient.ProcessPayment(request);
+        var transactionResponse = await this.bankingClient.ProcessPayment(request);
 
-        // save the payment information to storage
-        var payment = await this.repository.Save(PaymentBuilder.FromRequestResponse(request, paymnentResponse));
+        // update the payent item to reflect the new status
+        payment.ExternalReference = transactionResponse.Id;
+        payment.Status = transactionResponse.Status;
 
-        paymnentResponse.Id = payment.Id;
+        // update the payment information to storage
+        await this.repository.Save(payment);
 
-        return paymnentResponse;
+        return new PaymentResponse {
+            Id = request.Id,
+            ExternalReference = transactionResponse.Id,
+            Status= transactionResponse.Status
+        };
     }
 }
 

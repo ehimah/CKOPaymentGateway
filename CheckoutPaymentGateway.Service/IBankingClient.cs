@@ -5,7 +5,7 @@ namespace CheckoutPaymentGateway.Service
 {
 	public interface IBankingClient
 	{
-		Task<PaymentResponse> ProcessPayment(PaymentRequest paymentRequest);
+		Task<TransactionResponse> ProcessPayment(PaymentRequest paymentRequest);
 	}
 }
 
