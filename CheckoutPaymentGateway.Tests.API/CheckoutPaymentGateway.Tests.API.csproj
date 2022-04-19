@@ -26,5 +26,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Microsoft.AspNetCore.Mvc.Testing" />
+    <None Remove="Integration\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Integration\" />
   </ItemGroup>
 </Project>

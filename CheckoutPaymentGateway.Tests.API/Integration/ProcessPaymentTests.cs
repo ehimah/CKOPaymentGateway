@@ -10,12 +10,12 @@ using Xunit;
 
 namespace CheckoutPaymentGateway.Tests.API;
 
-public class PaymentGatewayTests: IClassFixture<WebApplicationFactory<CheckOutPaymentGateway.API.Startup>>
+public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPaymentGateway.API.Startup>>
 {
     const string REST_API_URL = "api/payment";
     private readonly HttpClient httpClient;
 
-    public PaymentGatewayTests(WebApplicationFactory<CheckOutPaymentGateway.API.Startup> factory)
+    public ProcessPaymentTests(WebApplicationFactory<CheckOutPaymentGateway.API.Startup> factory)
     {
         httpClient = factory.CreateClient();
     }
@@ -80,22 +80,5 @@ public class PaymentGatewayTests: IClassFixture<WebApplicationFactory<CheckOutPa
         var response2 = await httpClient.SendAsync(request2);
 
         Assert.Equal(HttpStatusCode.Created, response2.StatusCode);
-    }
-
-
-    [Fact]
-    public async void GetPayment_WhenCalledWithValidId_ReturnsPaymentItem()
-    {
-        // Act
-        var paymentId = Guid.NewGuid();
-        var response = await httpClient.GetAsync($"{REST_API_URL}/{paymentId}");
-
-        // Assert
-        response.EnsureSuccessStatusCode();
-        var stringResponse = await response.Content.ReadAsStringAsync();
-
-        var item = JsonSerializer.Deserialize<object>(stringResponse, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-
-        Assert.NotNull(item);
     }
 }

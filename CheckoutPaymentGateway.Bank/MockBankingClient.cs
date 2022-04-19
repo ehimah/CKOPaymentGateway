@@ -41,6 +41,11 @@ namespace CheckoutPaymentGateway.Bank
             return Task.FromResult(response);
         }
 
+        /// <summary>
+        /// Validates a Payment Request
+        /// </summary>
+        /// <param name="paymentRequest"></param>
+        /// <returns></returns>
         private static Tuple<bool, string> PaymentRequestIsValid(PaymentRequest paymentRequest)
         {
             var errors = new List<string>();
