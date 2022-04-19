@@ -31,6 +31,8 @@ namespace CheckOutPaymentGateway.API
         {
             services.AddControllers();
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             // register dependencies
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IPaymentRepository, InMemoryPaymentRepository>();
