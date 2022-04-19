@@ -9,6 +9,7 @@ namespace CheckoutPaymentGateway.Service.Models
 
 		public Guid Id { get; set; }
 		public TransactionStatus Status { get; set; }
-	}
+        public string Comment { get; set; }
+    }
 }
 

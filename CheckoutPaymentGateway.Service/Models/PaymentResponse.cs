@@ -6,6 +6,7 @@ namespace CheckoutPaymentGateway.Service.Models
         public Guid Id { get; set; }
         public Guid ExternalReference { get; set; }
         public TransactionStatus Status { get; set; }
+        public string ExternalComment { get; set; }
     }
 }
 

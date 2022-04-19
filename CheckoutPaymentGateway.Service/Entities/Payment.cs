@@ -7,7 +7,8 @@ namespace CheckoutPaymentGateway.Service.Entities
 	{
 		public Guid Id { get; set; }
 		public Guid ExternalReference { get; set; }
-		public TransactionStatus Status { get; set; }
+        public string ExternalComment { get; set; }
+        public TransactionStatus Status { get; set; }
 
 		public string CardHolderFullName { get; set; }
 		public string CardNumber { get; set; }

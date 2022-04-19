@@ -49,15 +49,19 @@ namespace CheckOutPaymentGateway.API.Controllers
                     // we've seen this request before, return a conflict response
                     return StatusCode((int)HttpStatusCode.Conflict);
                 }
+
                 var paymentRequet = this.mapper.Map<PaymentRequest>(paymentRequestDto);
 
                 var response = await paymentService.ProcessPayment(paymentRequet);
 
-                if(response == null)
+                // if the transaction didn't succeed, then report errors
+                if(response.Status != TransactionStatus.Accepted)
                 {
-                    return StatusCode((int)HttpStatusCode.BadRequest);
+                    return StatusCode((int)HttpStatusCode.BadRequest, response.ExternalComment);
                 }
-                return StatusCode((int)HttpStatusCode.Created, response);
+                var responseDto = mapper.Map<PaymentResponseDto>(response);
+
+                return StatusCode((int)HttpStatusCode.Created, responseDto);
             }
             catch (Exception ex)
             {

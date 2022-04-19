@@ -33,9 +33,10 @@ public class PaymentService : IPaymentService
         // call acquiring bank to process transaction
         var transactionResponse = await this.bankingClient.ProcessPayment(request);
 
-        // update the payent item to reflect the new status
+        // update the payent item to reflect the new status and comments from the acquiring bank
         payment.ExternalReference = transactionResponse.Id;
         payment.Status = transactionResponse.Status;
+        payment.ExternalComment = transactionResponse.Comment;
 
         // update the payment information to storage
         await this.repository.Save(payment);
@@ -43,7 +44,8 @@ public class PaymentService : IPaymentService
         return new PaymentResponse {
             Id = request.Id,
             ExternalReference = transactionResponse.Id,
-            Status= transactionResponse.Status
+            Status= transactionResponse.Status,
+            ExternalComment = transactionResponse.Comment
         };
     }
 }
