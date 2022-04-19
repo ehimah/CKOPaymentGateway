@@ -3,9 +3,9 @@ namespace CheckoutPaymentGateway.Service.Models
 {
 	public class PaymentResponse
 	{
-		public PaymentResponse()
-		{
-		}
-	}
+        public Guid Id { get; set; }
+        public Guid ExternalReference { get; set; }
+        public TransactionStatus Status { get; set; }
+    }
 }
 
