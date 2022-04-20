@@ -13,9 +13,8 @@ namespace CheckoutPaymentGateway.Service.Entities
 		public string CardHolderFullName { get; set; }
 		public string CardNumber { get; set; }
 		public string CardExpiryDate { get; set; }
-		public double Amount { get; set; }
-		public string Currency { get; set; }
-
+		public decimal Amount { get; set; }
+        public string Currency { get; set; }
 	}
 
 	public class PaymentBuilder

@@ -24,7 +24,7 @@ namespace CheckoutPaymentGateway.Tests.API.Unit
 				CardHolderFullName = "EHIMAH OBUSE",
 				CardExpiryDate = "04/25",
 				CardCVV = "NGN",
-				Amount = 12.34,
+				Amount = 12.34m,
 				Currency = "GBP",
 			};
 
@@ -50,7 +50,7 @@ namespace CheckoutPaymentGateway.Tests.API.Unit
 				CardExpiryDate = "04/25",
 				// wrong CVV length
 				CardCVV = "90",
-				Amount = 12.34,
+				Amount = 12.34m,
 				Currency = "GBP",
 			};
 

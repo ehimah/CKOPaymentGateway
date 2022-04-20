@@ -19,6 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.4" />
+    <PackageReference Include="Bogus" Version="34.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +29,8 @@
     <None Remove="Microsoft.AspNetCore.Mvc.Testing" />
     <None Remove="Integration\" />
     <None Remove="Unit\" />
+    <None Remove="Faker.Net" />
+    <None Remove="Bogus" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Integration\" />

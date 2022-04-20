@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using Bogus;
 using CheckoutPaymentGateway.Service.Models;
 using CheckOutPaymentGateway.API.Controllers;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -20,24 +21,30 @@ public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPa
         httpClient = factory.CreateClient();
     }
 
+    private static PaymentRequest GetMockPayload(Guid id)
+    {
+        var faker = new Faker();
+        var payload = new PaymentRequest
+        {
+            Id = id,
+            CardNumber = "1234123412341234",
+            CardHolderFullName = faker.Name.FullName(),
+            CardExpiryDate = "04/25",
+            CardCVV = faker.Finance.CreditCardCvv(),
+            Amount = faker.Finance.Amount(),
+            Currency = faker.Finance.Currency().Code,
+        };
+        return payload;
+    }
+
     [Fact]
     public async void ProcessPayment_WhenCalledWithValidParameters_ReturnsCreatedResult()
     {
         // Arrange
-        var request = new HttpRequestMessage(HttpMethod.Post, REST_API_URL);
-
-        var payload = new PaymentRequest
+        var request = new HttpRequestMessage(HttpMethod.Post, REST_API_URL)
         {
-            Id = Guid.NewGuid(),
-            CardNumber = "1234123412341234",
-            CardHolderFullName = "EHIMAH OBUSE",
-            CardExpiryDate = "04/25",
-            CardCVV = "NGN",
-            Amount = 12.34,
-            Currency = "GBP",
+            Content = new StringContent(JsonSerializer.Serialize(GetMockPayload(Guid.NewGuid())), Encoding.UTF8, "application/json")
         };
-
-        request.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
         // Act
         var response = await httpClient.SendAsync(request);
@@ -49,36 +56,33 @@ public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPa
     [Fact]
     public async void ProcessPayment_WhenCalledWithDuplicateRequestParameters_ReturnsConflictResult()
     {
+        // Scene 1
         // Arrange
-        var request1 = new HttpRequestMessage(HttpMethod.Post, REST_API_URL);
+        var requestId = Guid.NewGuid();
 
-        var payload = new PaymentRequest
+        var request1 = new HttpRequestMessage(HttpMethod.Post, REST_API_URL)
         {
-            Id = Guid.NewGuid(),
-            CardNumber = "1234123412341234",
-            CardHolderFullName = "EHIMAH OBUSE",
-            CardExpiryDate = "04/25",
-            CardCVV = "NGN",
-            Amount = 12.34,
-            Currency = "GBP",
+            Content = new StringContent(JsonSerializer.Serialize(GetMockPayload(requestId)), Encoding.UTF8, "application/json")
         };
-
-        request1.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
         // Act
         var response = await httpClient.SendAsync(request1);
 
-        // Assert
+        // Assert that 1st call results in created result
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
-        // Request 2
-        var request2 = new HttpRequestMessage(HttpMethod.Post, REST_API_URL);
-        // update the card detail
-        payload.CardNumber = "9876543210987654";
-        request2.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        // Scene 2
+        var request2 = new HttpRequestMessage(HttpMethod.Post, REST_API_URL)
+        {
+            Content = new StringContent(JsonSerializer.Serialize(GetMockPayload(requestId)), Encoding.UTF8, "application/json")
+        };
         // Call endpoint seconfd time with same request id
         var response2 = await httpClient.SendAsync(request2);
 
-        Assert.Equal(HttpStatusCode.Created, response2.StatusCode);
+        // Assert that the result is a conflict result
+        Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
     }
+
+    
 }
