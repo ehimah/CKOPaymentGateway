@@ -48,7 +48,7 @@ public class GetPaymentInfoTests : IClassFixture<WebApplicationFactory<CheckOutP
         response.EnsureSuccessStatusCode();
         var stringResponse = await response.Content.ReadAsStringAsync();
 
-        var item = JsonSerializer.Deserialize<PaymentResponseDto>(stringResponse, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+        var item = JsonSerializer.Deserialize<PaymentResponse>(stringResponse, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
         Assert.NotNull(item);
         Assert.Matches(CARD_MASK_REGEX, item.CardNumber);
