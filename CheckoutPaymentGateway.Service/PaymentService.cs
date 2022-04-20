@@ -24,7 +24,16 @@ public class PaymentService : IPaymentService
     public async Task<Payment> ProcessPayment(PaymentRequest request)
     {
         // save this transaction as pending
-        var payment = PaymentBuilder.PartialFromRequest(request);
+        // build a partial payment Item based of the request data
+        var payment = new Payment
+        {
+            Id = request.Id,
+            Amount = request.Amount,
+            CardExpiryDate = request.CardExpiryDate,
+            CardHolderFullName = request.CardHolderFullName,
+            CardNumber = MaskCreditCardNumber(request.CardNumber),
+            Currency = request.Currency,
+        };
 
         // set the transaction as pending
         payment.Status = TransactionStatus.Pending;
@@ -43,6 +52,19 @@ public class PaymentService : IPaymentService
         await this.repository.Save(payment);
 
         return payment;
+    }
+
+    /// <summary>
+    /// Mask the credit card number by converting all characters to the specified mask char but last 4
+    /// </summary>
+    /// <param name="creditCardNumber">The credit card number to mask</param>
+    /// <param name="maskChar">The mask char to use. Default is *</param>
+    /// <returns></returns>
+    private static string MaskCreditCardNumber(string creditCardNumber, char maskChar = '*')
+    {
+        var cardMask = creditCardNumber[^4..].PadLeft(creditCardNumber.Length, maskChar);
+
+        return cardMask;
     }
 }
 
