@@ -32,6 +32,8 @@ namespace CheckOutPaymentGateway.API.Controllers
         /// <param name="id">The unique identifier of the payment</param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PaymentResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(Guid id)
         {
             // fetch the payment from the service
@@ -53,13 +55,26 @@ namespace CheckOutPaymentGateway.API.Controllers
         /// <summary>
         /// Process a merchant payment transaction
         /// </summary>
+        /// <remarks>
+        /// </remarks>
         /// <param name="paymentRequest">The payment request details</param>
+        /// <response code="201">Returns the newly processed payment item</response>
+        /// <response code="400">If the payment request contains invalid properties</response>
+        /// <response code="409">If the request id is a duplicate of a previous request</response>
         /// <returns>The transaction response along with the status</returns>
         [HttpPost]
+        [ProducesResponseType(typeof(PaymentResponse), 201)]
         public async Task<IActionResult> Post([FromBody] PaymentRequest paymentRequest)
         {
             try
             {
+                // validate that input model state
+                if (!ModelState.IsValid)
+                {
+                    // we've seen this request before, return a conflict response
+                    return StatusCode((int)HttpStatusCode.BadGateway);
+                }
+
                 // check if we've tried to process same request before
                 var existingPayment = await paymentService.GetPaymentInfo(paymentRequest.Id);
 

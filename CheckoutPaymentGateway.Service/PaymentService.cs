@@ -21,6 +21,14 @@ public class PaymentService : IPaymentService
         return payment;
     }
 
+    /// <summary>
+    /// Processes a payment transaction from the provided payment request.
+    /// 
+    /// 1. Transacts with the acquiring bank to process transaction
+    /// 2. Stores the payment details in the application store for future reference
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     public async Task<Payment> ProcessPayment(PaymentRequest request)
     {
         // save this transaction as pending
@@ -38,6 +46,7 @@ public class PaymentService : IPaymentService
         // set the transaction as pending
         payment.Status = TransactionStatus.Pending;
 
+        // save the payment information
         await this.repository.Save(payment);
 
         // call acquiring bank to process transaction
@@ -59,7 +68,7 @@ public class PaymentService : IPaymentService
     /// </summary>
     /// <param name="creditCardNumber">The credit card number to mask</param>
     /// <param name="maskChar">The mask char to use. Default is *</param>
-    /// <returns></returns>
+    /// <returns>The masked string</returns>
     private static string MaskCreditCardNumber(string creditCardNumber, char maskChar = '*')
     {
         var cardMask = creditCardNumber[^4..].PadLeft(creditCardNumber.Length, maskChar);

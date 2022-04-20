@@ -17,6 +17,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
 
 namespace CheckOutPaymentGateway.API
 {
@@ -43,7 +45,15 @@ namespace CheckOutPaymentGateway.API
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CKO PaymentGateway API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "CKO PaymentGateway API",
+                    Description = "A payment gateway API for handling merchant payments transactions",
+                    Version = "v1"
+                });
+                
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
             string authority = Configuration["Auth0:Authority"];
@@ -79,7 +89,7 @@ namespace CheckOutPaymentGateway.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "CKO PaymentGateway API V1");
-                // set swagger UI url to be app route
+                // set swagger UI url to be app root
                 c.RoutePrefix = string.Empty;
             });
 
