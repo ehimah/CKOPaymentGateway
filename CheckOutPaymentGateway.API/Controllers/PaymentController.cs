@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,7 +8,7 @@ using CheckoutPaymentGateway.Service.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.Extensions.Logging;
 
 namespace CheckOutPaymentGateway.API.Controllers
 {
@@ -22,6 +23,7 @@ namespace CheckOutPaymentGateway.API.Controllers
     {
         private readonly IPaymentService paymentService;
         public readonly IMapper mapper;
+        private readonly ILogger<PaymentController> logger;
 
         public PaymentController(IPaymentService paymentService, IMapper mapper)
         {
@@ -33,27 +35,39 @@ namespace CheckOutPaymentGateway.API.Controllers
         /// Retreive the details of a previously made payment
         /// </summary>
         /// <param name="id">The unique identifier of the payment</param>
-        /// <returns></returns>
+        /// <returns>The payment item of the id provided</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(PaymentResponse), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(PaymentResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Authorize]
         public async Task<IActionResult> Get(Guid id)
         {
-            // fetch the payment from the service
-            var existingPayment = await paymentService.GetPaymentInfo(id);
-
-            // if payment not found
-            if (existingPayment == null)
+            try
             {
-                // return a not found error
-                return StatusCode((int)HttpStatusCode.NotFound);
+                // fetch the payment from the service
+                var existingPayment = await paymentService.GetPaymentInfo(id);
+
+                // if payment not found
+                if (existingPayment == null)
+                {
+                    logger.LogWarning("Payment Information not found", id);
+                    // return a not found error
+                    return StatusCode(StatusCodes.Status404NotFound);
+                }
+
+                // map from payment to payment response
+                var response = mapper.Map<PaymentResponse>(existingPayment);
+
+                return StatusCode(StatusCodes.Status200OK, response);
             }
-
-            // map from payment to payment response
-            var response = mapper.Map<PaymentResponse>(existingPayment);
-
-            return StatusCode((int)HttpStatusCode.OK, response);
+            catch (Exception ex)
+            {
+                logger.LogError("An error occurred while retrieving the Payment", ex);
+                // process the exception and return HTTP 500
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            
         }
 
         /// <summary>
@@ -80,7 +94,10 @@ namespace CheckOutPaymentGateway.API.Controllers
                 // validate that input model state
                 if (!ModelState.IsValid)
                 {
-                    // we've seen this request before, return a conflict response
+                    var modelErrors = ModelState.Values.SelectMany(v => v.Errors);
+                    logger.LogWarning("Request model validation failed", modelErrors);
+
+                    // model validation failed so return bad request response
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
 
@@ -107,6 +124,7 @@ namespace CheckOutPaymentGateway.API.Controllers
             }
             catch (Exception ex)
             {
+                logger.LogError("An error occurred while processing the Payment", ex);
                 // process the exception and return HTTP 500
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

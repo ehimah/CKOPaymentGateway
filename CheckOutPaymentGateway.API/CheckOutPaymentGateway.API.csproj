@@ -27,6 +27,8 @@
     <None Remove="Swashbuckle.AspNetCore" />
     <None Remove="Newtonsoft.Json" />
     <None Remove="Dto\MappingProfiles\" />
+    <None Remove="NLog" />
+    <None Remove="NLog.Web.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dto\" />
@@ -38,5 +40,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLog" Version="4.7.15" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="nlog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>
