@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "CheckOutPaymentGateway.API": {
+    "API": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "/",
