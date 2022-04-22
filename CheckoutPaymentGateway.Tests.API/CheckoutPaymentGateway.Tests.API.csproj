@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -20,6 +20,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.4" />
     <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="Auth0.AuthenticationApi" Version="7.15.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,9 +32,17 @@
     <None Remove="Unit\" />
     <None Remove="Faker.Net" />
     <None Remove="Bogus" />
+    <None Remove="Auth0.AuthenticationApi" />
+    <None Remove="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Integration\" />
     <Folder Include="Unit\" />
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

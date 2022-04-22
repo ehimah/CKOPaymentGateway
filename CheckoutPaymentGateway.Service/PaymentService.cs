@@ -36,6 +36,7 @@ public class PaymentService : IPaymentService
         var payment = new Payment
         {
             Id = request.Id,
+            MerchantId = request.MerchantId,
             Amount = request.Amount,
             CardExpiryDate = request.CardExpiryDate,
             CardHolderFullName = request.CardHolderFullName,

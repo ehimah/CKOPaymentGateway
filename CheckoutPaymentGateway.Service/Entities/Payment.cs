@@ -11,6 +11,11 @@ namespace CheckoutPaymentGateway.Service.Entities
 		public Guid Id { get; set; }
 
         /// <summary>
+        /// The Id of the merchant to this payment is made
+        /// </summary>
+        public Guid MerchantId { get; set; }
+
+        /// <summary>
         /// The external transaction reference of the associated bank transaction
         /// </summary>
 		public Guid ExternalReference { get; set; }

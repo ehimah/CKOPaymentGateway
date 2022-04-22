@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Bogus;
 using CheckoutPaymentGateway.Service.Models;
+using CheckoutPaymentGateway.Tests.API.Helpers;
 using CheckOutPaymentGateway.API.Controllers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace CheckoutPaymentGateway.Tests.API;
 
-public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPaymentGateway.API.Startup>>
+public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPaymentGateway.API.Startup>>, IAsyncLifetime
 {
     const string REST_API_URL = "api/payment";
     private readonly HttpClient httpClient;
@@ -84,5 +87,15 @@ public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPa
         Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
     }
 
-    
+    public async Task InitializeAsync()
+    {
+        var accessToken = await AuthTokenProvider.GetAccessToken();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+    }
+
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
 }

@@ -11,6 +11,12 @@ namespace CheckoutPaymentGateway.Service.Models
         [Required]
         public Guid Id { get; set; }
 
+        /// <summary>
+        /// The Id of the merchant to this payment is made
+        /// </summary>
+        [Required]
+        public Guid MerchantId { get; set; }
+
 		/// <summary>
         /// The Full name of the card holder
         /// </summary>
