@@ -1,24 +1,16 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Auth0.AuthenticationApi;
-using Auth0.AuthenticationApi.Models;
 using CheckoutPaymentGateway.Service.Models;
 using CheckoutPaymentGateway.Tests.API.Helpers;
-using CheckOutPaymentGateway.API.Controllers;
-using CheckOutPaymentGateway.API.Dto;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace CheckoutPaymentGateway.Tests.API;
 
-public class GetPaymentInfoTests : IClassFixture<WebApplicationFactory<CheckOutPaymentGateway.API.Startup>>, IAsyncLifetime
+public class GetPaymentInfoTests : IClassFixture<CustomWebApplicationFactory<CheckOutPaymentGateway.API.Startup>>, IAsyncLifetime
 {
     const string REST_API_URL = "api/payment";
     private const string CARD_MASK_REGEX = @"\*{12}\d{4}";
@@ -27,9 +19,13 @@ public class GetPaymentInfoTests : IClassFixture<WebApplicationFactory<CheckOutP
     
 
 
-    public GetPaymentInfoTests(WebApplicationFactory<CheckOutPaymentGateway.API.Startup> factory)
+    public GetPaymentInfoTests(CustomWebApplicationFactory<CheckOutPaymentGateway.API.Startup> factory)
     {
         httpClient = factory.CreateClient();
+
+        var accessToken = FakeTokenProvider.GetAccessToken();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
 
         //setup code
         TestPaymentId = Guid.NewGuid();
@@ -38,9 +34,6 @@ public class GetPaymentInfoTests : IClassFixture<WebApplicationFactory<CheckOutP
 
     public async Task InitializeAsync()
     {
-        var accessToken = await AuthTokenProvider.GetAccessToken();
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
         await PopulateTestPayments();
     }
 

@@ -4,24 +4,23 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Bogus;
 using CheckoutPaymentGateway.Service.Models;
 using CheckoutPaymentGateway.Tests.API.Helpers;
-using CheckOutPaymentGateway.API.Controllers;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace CheckoutPaymentGateway.Tests.API;
 
-public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPaymentGateway.API.Startup>>, IAsyncLifetime
+public class ProcessPaymentTests: IClassFixture<CustomWebApplicationFactory<CheckOutPaymentGateway.API.Startup>>
 {
     const string REST_API_URL = "api/payment";
     private readonly HttpClient httpClient;
 
-    public ProcessPaymentTests(WebApplicationFactory<CheckOutPaymentGateway.API.Startup> factory)
+    public ProcessPaymentTests(CustomWebApplicationFactory<CheckOutPaymentGateway.API.Startup> factory)
     {
         httpClient = factory.CreateClient();
+        var accessToken = FakeTokenProvider.GetAccessToken();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
     }
 
     private static PaymentRequest GetMockPayload(Guid id)
@@ -85,17 +84,5 @@ public class ProcessPaymentTests: IClassFixture<WebApplicationFactory<CheckOutPa
 
         // Assert that the result is a conflict result
         Assert.Equal(HttpStatusCode.Conflict, response2.StatusCode);
-    }
-
-    public async Task InitializeAsync()
-    {
-        var accessToken = await AuthTokenProvider.GetAccessToken();
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
     }
 }
