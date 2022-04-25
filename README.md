@@ -98,6 +98,10 @@ The API endpoints are secured from unauthorised access. Only users with an acces
 The API endpoint has a documentation page at https://localhost:5001/index.html. This page hosts the API endpoints doucmentation and it gives user a chance to test run the endpoints.
 The source code contains illustrative comments that explains intention at the time of wrting. They also serve as a letter to my future self.
 
+## Logging
+
+The project integrates the NLog project for application logs management. The logger can be configure in the config file at  `CheckOutPaymentGateway.API/nlog.config`
+
 ## Testing
 The application cource has essential tests that cover the critical functionalities.
 
