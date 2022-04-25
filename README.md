@@ -128,5 +128,5 @@ With more time resource, I can have more scope to cover other concerns
     - invalid data
     - No validation of transaction amount around extremes of zero and negative values.
     
--Implement a circuit breaker around the connectivity to the bank API. This will ensure we deliver responses to clients in a reasonable amount of time, or timeout where neccesary.
+- Implement a circuit breaker around the connectivity to the bank API. This will ensure we deliver responses to clients in a reasonable amount of time, or timeout where neccesary.
  
