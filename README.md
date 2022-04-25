@@ -1,19 +1,16 @@
 ﻿# CKO Payment Gateway
 This repository is a submission for the coding challenge at Checkout.com
 
-The API projects contains implementation for two 
+The API projects contains implementation for two endpoints
+- Retrieve payment transaction details
+- Process Payment Transaction
 
-# How to
 ## Prerequisite
 The project is built targeting .NET 6
 
 
 ### Restore Nuget Packages
-In the solution directory, spin up a terminal and type `dotnet restore` to restore the project dependencies for the entire solution
-
-### Run the API project
-
-- Navigate to the API project directory `cd CheckOutPaymentGateway.API/`
+Navigate to the solution directory, spin up a terminal and type `dotnet restore` to restore the project dependencies for the entire solution
 
 
 ## Obtain Auth Key
@@ -43,14 +40,21 @@ You should extract the `access_token` property from the response for use in the 
 
 ## Run the Project
 
-- navigate into the API project directory by `cd CheckOutPaymentGateway.API`
-- run `dotnet run --launch-profile API`
+- navigate into the API project directory.
+```bash
+    cd CheckOutPaymentGateway.API
+```
+- run
+```bash
+    dotnet run --launch-profile API
+```
 
 ## Run tests
 
 To run tests
 1. Navigate to the solution directory
 2. fill in the Auth API test credentials in the `CheckoutPaymentGateway.Tests.API/appsettings.json` file
+3. ```bash dotnet test```
 
 
 ## Call API Endpoints
@@ -124,5 +128,5 @@ With more time resource, I can have more scope to cover other concerns
     - invalid data
     - No validation of transaction amount around extremes of zero and negative values.
     
-Implement a circuit breaker around the connectivity to the bank API. This will ensure we deliver responses to clients in a reasonable amount of time, or timeout where neccesary.
+-Implement a circuit breaker around the connectivity to the bank API. This will ensure we deliver responses to clients in a reasonable amount of time, or timeout where neccesary.
  
