@@ -94,6 +94,7 @@ The API endpoints are secured from unauthorised access. Only users with an acces
 
 
 ## Documentation
+<img width="1495" alt="swagger" src="https://user-images.githubusercontent.com/2523164/165078004-7c5905ec-4c71-4bdf-a75a-928f7bc50b55.png">
 
 The API endpoint has a documentation page at https://localhost:5001/index.html. This page hosts the API endpoints doucmentation and it gives user a chance to test run the endpoints.
 The source code contains illustrative comments that explains intention at the time of wrting. They also serve as a letter to my future self.
